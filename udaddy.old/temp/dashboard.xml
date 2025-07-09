@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roadmap version="4.0" name="Netbase平台架构重构与演进路线图">
+  <overview>
+    <core_idea>将Netbase从一个简单的“任务流执行引擎”升级为一个健壮的、可扩展的“版本化数字资产管理与安全计算平台”。</core_idea>
+    <rationale>
+      <problem>旧架构将Agent定义与其实体（代码/文件路径）紧密耦合，使得版本管理、依赖更新和审计追溯变得极其困难。</problem>
+      <problem>原有的单任务调度模型无法有效利用系统资源，限制了平台的吞吐量和可扩展性。</problem>
+      <problem>缺乏安全沙箱，直接执行代码带来了巨大的安全风险，无法安全地运行来自用户或第三方的不可信代码。</problem>
+    </rationale>
+    <goal>构建一个支持多租户、具备企业级安全性和高并发处理能力的云原生工作流平台。</goal>
+  </overview>
+
+  <milestones>
+    <milestone name="里程碑一: 后端核心逻辑现代化" status="completed">
+      <description>此里程碑的目标是在不改变数据模型的情况下，优先解决后端最核心的性能和安全瓶颈。这是整个重构的基石，因为它创建了一个能够承载未来功能的、健壮的执行引擎。</description>
+       <tasks>
+        <task name="调度器升级" status="completed">
+            <details>从“逐一派单”升级为“批量打包”，能极大减少数据库和消息队列的I/O，是提升系统吞吐量的关键。`dispatch_task_group` 函数将一批就绪的任务打包，生成唯一的`group_id`用于追踪，然后作为一个整体任务发送给Worker。</details>
+            <work_done>重构 scheduler.py，实现了 dispatch_task_group；修复了调度器与旧数据模型之间的逻辑错误。</work_done>
+        </task>
+        <task name="Worker异步化" status="completed">
+            <details>同步Worker是最大的性能瓶颈。切换到`asyncio`模型，使其能利用I/O等待时间并发处理成百上千个任务。使用`asyncio.TaskGroup`来并发管理一个任务组内的所有任务协程。</details>
+            <work_done>重构 worker.py，引入了asyncio.run和TaskGroup；为不同Agent类型创建了专门的异步执行函数。</work_done>
+        </task>
+        <task name="WASM安全沙箱集成" status="completed">
+            <details>`WasmManager` 使用`wasmtime`库，实现了Fuel限制、超时控制、独立的内存空间和基于目录映射的文件系统隔离，为WASM代码提供了一个安全的“牢笼”。</details>
+            <work_done>打通了`worker.py`到`WasmManager`的调用链路，激活了安全沙箱；为每个WASM任务创建并清理唯一的临时工作区。</work_done>
+        </task&gt>
+        <task name="WASM Agent修复" status="completed">
+            <details>作为我们首要支持的Agent类型，其自身的正确性是所有工作的前提。</details>
+            <work_done>修复了`wasm_agents/src/lib.rs`中的编译错误。</work_done>
+        </task>
+      </tasks>
+    </milestone>
+    
+    <milestone name="里程碑二: 版本化资产管理" status="pending" depends_on="里程碑一: 后端核心逻辑现代化">
+      <description>此里程碑是本次重构的核心目标，它将使平台从“执行任务”进化为“管理资产”。这是对系统架构的重大升级。</description>
+      
+      <effort_assessment>
+        <overall level="重大 (Major)">本次重构将触及应用后端的所有层面，包括数据库、CRUD、API和核心业务逻辑。工作量巨大，但价值同样巨大。</overall>
+        <area name="数据库与数据迁移" workload="高">
+          <challenge>风险最高的部分。核心挑战在于编写一个安全、可靠、幂等的Alembic数据迁移脚本，用于将现有的`agents`数据无损地迁移到新的三层资产模型中。</challenge>
+        </area>
+        <area name="CRUD与API层" workload="高">
+          <challenge>需要设计并实现全新的资产管理API，特别是处理`multipart/form-data`文件上传的“发布新版本”接口。同时，所有相关的CRUD操作都需要具备事务性，保证数据一致性。</challenge>
+        </area>
+        <area name="核心调度逻辑" workload="中">
+          <challenge>调度器中构建执行路径的逻辑需要从读取单个字段，升级为执行一个跨多表的JOIN查询。需要对该查询进行优化，避免其成为新的性能瓶颈。</challenge>
+        </area>
+      </effort_assessment>
+
+      <tasks>
+        <task name="数据库模型升级" status="pending">
+          <details>构建版本化管理的地基：`AssetPackage` -> `AssetVersion` -> `AssetFile` 的三层结构。</details>
+          <implementation>
+            <code file="app/db/base.py" language="python">
+              <![CDATA[
+class AssetPackage(Base):
+    __tablename__ = "asset_packages"
+    id = Column(Integer, primary_key=True)
+    nanoid = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, unique=True, index=True, nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    versions = relationship("AssetVersion", back_populates="package", cascade="all, delete-orphan")
+
+class AssetVersion(Base):
+    __tablename__ = "asset_versions"
+    id = Column(Integer, primary_key=True)
+    package_id = Column(Integer, ForeignKey("asset_packages.id"), nullable=False)
+    version_string = Column(String, nullable=False) # e.g., "1.0.1"
+    description = Column(Text)
+    package = relationship("AssetPackage", back_populates="versions")
+    files = relationship("AssetFile", back_populates="version", cascade="all, delete-orphan")
+    __table_args__ = (UniqueConstraint('package_id', 'version_string', name='_package_version_uc'),)
+
+class AssetFile(Base):
+    __tablename__ = "asset_files"
+    id = Column(Integer, primary_key=True)
+    version_id = Column(Integer, ForeignKey("asset_versions.id"), nullable=False)
+    relative_path = Column(String, nullable=False) # e.g., "bin/agent.wasm" or "config.json"
+    checksum = Column(String, nullable=False) # SHA256
+    version = relationship("AssetVersion", back_populates="files")
+              ]]>
+            </code>
+          </implementation>
+        </task>
+        <task name="Agent模型重构" status="pending">
+          <details>`Agent`表转变为一个轻量级的“执行指针”，实现定义与实体的彻底解耦。</details>
+          <implementation>
+            <code file="app/db/base.py" language="python">
+              <![CDATA[
+class Agent(Base):
+    __tablename__ = "agents"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False, index=True, comment="Agent的友好名称")
+    description = Column(Text, comment="Agent的功能描述")
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="agents")
+    asset_file_id = Column(Integer, ForeignKey("asset_files.id"), nullable=False)
+    asset_file = relationship("AssetFile")
+    config = Column(JSONB, comment="运行时应用的参数覆盖")
+              ]]>
+            </code>
+          </implementation>
+        </task>
+        <task name="创建资产管理CRUD和API" status="pending">
+          <details>为新的资产模型提供完整的编程接口，这是UI和CI/CD集成的基础。</details>
+          <implementation>
+            <business_logic file="app/crud/crud_asset.py">`create_version` 函数必须是事务性的：它需要同时创建`AssetVersion`记录和其下所有`AssetFile`的记录。如果任何一个文件保存或校验和计算失败，整个版本创建过程都必须回滚。</business_logic>
+            <api_endpoint file="app/api/v1/endpoints/asset_packages.py" method="POST" path="/asset-packages/{package_nanoid}/versions">此端点需要处理 `multipart/form-data`。请求中包含一个`metadata.json`部分和多个文件部分。后端逻辑需要原子性地完成文件保存、校验和计算、数据库记录创建和文件持久化。</api_endpoint>
+          </implementation>
+        </task>
+        <task name="数据库迁移" status="pending">
+          <details>编写并执行Alembic迁移脚本，将旧数据平滑地迁移到新结构中。</details>
+          <implementation>
+            <migration_logic file="alembic/versions/xxxx_add_asset_models.py">迁移脚本 `upgrade()` 函数需要：1. 创建新表。2. 为`agents`表添加新列。3. 核心：遍历旧`agents`表，为每条记录动态创建`AssetPackage/Version/File`记录。4. 将新`AssetFile.id`回填到`agents.asset_file_id`。5. 移除`agents`表的旧列。</migration_logic>
+          </implementation>
+        </task>
+      </tasks>
+    </milestone>
+
+    <milestone name="里程碑三: 工作流与执行逻辑最终解耦" status="pending" depends_on="里程碑二: 版本化资产管理">
+        <description>完成此里程碑后，调度器和Worker将完全与文件系统路径解耦，仅通过资产ID进行操作，使平台部署和运维极大简化。</description>
+        <tasks>
+            <task name="调度器最终完善" status="pending">
+                <details>修改`scheduler.py`，在构建分发载荷时，执行一个跨`agents`, `asset_files`, `asset_versions`, `asset_packages`四张表的高效JOIN查询，动态构建出WASM模块的绝对物理路径，并将其传递给Worker。</details>
+            </task>
+            <task name="Worker最终完善" status="pending">
+                <details>修改`worker.py`，实现文件预取逻辑。在任务执行前，根据调度器传递来的、包含完整存储信息的路径，从共享存储（如S3, NFS）中将资产文件拉取到本地的安全工作区中。</details>
+            </task>
+        </tasks>
+    </milestone>
+  </milestones>
+</roadmap>

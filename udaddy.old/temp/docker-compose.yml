@@ -1,0 +1,38 @@
+# Docker Compose 文件版本
+version: '3.8'
+
+# 定义所有服务
+services:
+  # PostgreSQL 数据库服务
+  db:
+    image: postgres:14-alpine
+    container_name: netbase_db
+    ports:
+      - "5432:5432" # 将容器的5432端口映射到主机的5432端口
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # 数据持久化
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=netbase
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d netbase"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis 服务，用于 Celery Broker 和结果后端
+  redis:
+    image: redis:7-alpine
+    container_name: netbase_redis
+    ports:
+      - "6379:6379" # 将容器的6379端口映射到主机的6379端口
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# 定义数据卷，用于持久化存储
+volumes:
+  postgres_data:

@@ -1,0 +1,23 @@
+# Web 框架
+fastapi
+uvicorn[standard]
+
+# 数据库与 ORM
+sqlalchemy
+psycopg2-binary
+alembic
+
+# 异步任务队列
+celery
+redis
+
+# 认证
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+
+# 配置管理
+pydantic-settings
+
+# HTTP 客户端 (用于异步任务)
+httpx
