@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "api",
+    "worker",
+    "core", "platform_backend/core", "platform_backend/api", "platform_backend/worker",
+]
