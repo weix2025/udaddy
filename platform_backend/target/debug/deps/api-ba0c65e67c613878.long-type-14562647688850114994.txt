@@ -1,2 +1,0 @@
-fn(State<AppState>) -> impl std::future::Future<Output = Result<axum::Json<()>, core::error::Error>> {create_pipeline}
-fn(State<AppState>) -> impl std::future::Future<Output = Result<axum::Json<()>, core::error::Error>> {create_pipeline}: Handler<_, _>

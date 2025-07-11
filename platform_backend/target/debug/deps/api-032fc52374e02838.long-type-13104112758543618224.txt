@@ -1,2 +1,0 @@
-fn(State<AppState>) -> impl std::future::Future<Output = Result<Json<()>, core::error::Error>> {get_upload_url}
-fn(State<AppState>) -> impl std::future::Future<Output = Result<Json<()>, core::error::Error>> {get_upload_url}: Handler<_, _>

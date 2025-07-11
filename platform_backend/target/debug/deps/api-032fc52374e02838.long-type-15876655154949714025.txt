@@ -1,1 +1,0 @@
-axum::middleware::FromFn<fn(axum::http::Request<_>, Next, AppState) -> impl std::future::Future<Output = Result<Response<Body>, axum::http::StatusCode>> {auth_middleware::<_>}, AppState, Route, _>
