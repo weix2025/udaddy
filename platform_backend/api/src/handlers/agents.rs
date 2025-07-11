@@ -1,2 +1,11 @@
-// Agent处理器：提供对Agent模板的CRUD操作，
-// 允许用户创建、查询、更新和分享他们自己的Agent。
+use axum::{extract::State, Json};
+use crate::state::AppState;
+use core::error::Result;
+
+pub async fn create_agent(
+    State(state): State<AppState>,
+    // Json(payload): Json<...>, // TODO: Define payload
+) -> Result<Json<()>> { // TODO: Define response
+    // TODO: Implement logic
+    Ok(Json(()))
+}

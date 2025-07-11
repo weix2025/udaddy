@@ -1,4 +1,33 @@
-// 统一错误处理：定义平台统一的Error枚举和Result<T, Error>类型。
-// 它将sqlx::Error, std::io::Error, reqwest::Error等底层错误统一封装，
-// 并为axum实现IntoResponse Trait，使得在API处理器中可以直接通过?操作符传播错误，
-// 并自动转换为合适的HTTP错误响应（如404, 500）。
+use thiserror::Error;
+
+pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("Database error: {0}")]
+    Sqlx(#[from] sqlx::Error),
+
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+
+    #[error("JWT error: {0}")]
+    Jwt(#[from] jwt::Error),
+
+    #[error("Argon2 error: {0}")]
+    Argon2(String),
+
+    #[error("Wasmtime error: {0}")]
+    Wasmtime(#[from] wasmtime::Error),
+
+    #[error("Wasm memory error: {0}")]
+    WasmMemory(String),
+    
+    #[error("Config error: {0}")]
+    Config(#[from] std::env::VarError),
+}
+
+impl From<argon2::Error> for Error {
+    fn from(err: argon2::Error) -> Self {
+        Error::Argon2(err.to_string())
+    }
+}

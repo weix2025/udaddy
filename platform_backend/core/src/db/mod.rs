@@ -1,5 +1,15 @@
-// 数据库模块：负责初始化并提供一个全局共享的sqlx::PgPool数据库连接池。
-// 它将处理连接池的配置，如最大连接数、超时时间等，确保数据库访问的高效和稳定。
+use sqlx::postgres::PgPoolOptions;
+use sqlx::PgPool;
+use crate::config::CONFIG;
+use crate::error::Result;
 
-pub mod models;
 pub mod crud;
+pub mod models;
+
+pub async fn init_db_pool() -> Result<PgPool> {
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&CONFIG.database_url)
+        .await?;
+    Ok(pool)
+}

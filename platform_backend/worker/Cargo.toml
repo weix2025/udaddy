@@ -1,0 +1,20 @@
+[package]
+name = "worker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+core = { path = "../core" }
+
+# Async
+tokio = { version = "1", features = ["full"] }
+
+# Redis
+redis = { version = "0.25", features = ["tokio-comp"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Serialization
+serde_json = "1.0"

@@ -1,3 +1,22 @@
-// 任务消费者：连接到Redis，通过发布/订阅模式循环等待并接收需要执行的任务消息。
-// 消息格式为JSON，包含任务类型（如NewRun）和关键ID（如run_id）。
-// 收到消息后，它会将其分发给processor进行处理。
+use redis::AsyncCommands;
+use crate::processor;
+use core::error::Result;
+
+pub async fn start_consumer_loop(
+    // redis_client: &mut redis::Client, // TODO: Pass Redis client
+    // db_pool: &sqlx::PgPool, // TODO: Pass DB pool
+) -> Result<()> {
+    // let mut con = redis_client.get_async_connection().await?;
+    // let mut pubsub = con.into_pubsub();
+    // pubsub.subscribe("task_queue").await?;
+
+    // loop {
+    //     let msg = pubsub.get_message().await?;
+    //     let payload: String = msg.get_payload()?;
+        
+    //     // TODO: Deserialize payload and pass to processor
+    //     // processor::process_task(db_pool, payload).await?;
+    // }
+    
+    Ok(())
+}

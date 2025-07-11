@@ -1,3 +1,18 @@
-// 应用状态：定义AppState结构体，
-// 包含sqlx::PgPool数据库连接池、Arc<AIPlanner> AI规划器实例等所有需要跨请求共享的状态。
-// 使用Arc来实现线程安全的共享。
+use sqlx::PgPool;
+use std::sync::Arc;
+use core::ai::planner::AStarPlanner;
+
+#[derive(Clone)]
+pub struct AppState {
+    pub db_pool: PgPool,
+    pub ai_planner: Arc<AStarPlanner>,
+}
+
+impl AppState {
+    pub fn new(db_pool: PgPool) -> Self {
+        Self {
+            db_pool,
+            ai_planner: Arc::new(AStarPlanner),
+        }
+    }
+}

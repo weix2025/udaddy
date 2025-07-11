@@ -1,2 +1,19 @@
-// 配置管理：定义Config结构体，在程序启动时使用dotenvy和serde等库从.env文件一次性加载所有配置。
-// 使用once_cell确保配置只被加载一次，并以线程安全的方式全局可访问。
+use serde::Deserialize;
+use once_cell::sync::Lazy;
+use std::env;
+
+#[derive(Deserialize, Debug)]
+pub struct Config {
+    pub database_url: String,
+    pub jwt_secret: String,
+    pub minio_endpoint: String,
+}
+
+pub static CONFIG: Lazy<Config> = Lazy::new(|| {
+    dotenvy::dotenv().ok();
+    Config {
+        database_url: env::var("DATABASE_URL").expect("DATABASE_URL must be set"),
+        jwt_secret: env::var("JWT_SECRET").expect("JWT_SECRET must be set"),
+        minio_endpoint: env::var("MINIO_ENDPOINT").expect("MINIO_ENDPOINT must be set"),
+    }
+});

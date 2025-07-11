@@ -1,0 +1,12 @@
+C:\Users\Xion\Desktop\test\udaddy\platform_backend\target\debug\deps\libargon2-028a3b7ab70c79d4.rmeta: C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\lib.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\algorithm.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\blake2b_long.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\block.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\error.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\params.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\version.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\../README.md
+
+C:\Users\Xion\Desktop\test\udaddy\platform_backend\target\debug\deps\argon2-028a3b7ab70c79d4.d: C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\lib.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\algorithm.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\blake2b_long.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\block.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\error.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\params.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\version.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\../README.md
+
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\lib.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\algorithm.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\blake2b_long.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\block.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\error.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\params.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\version.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\argon2-0.5.3\src\../README.md:

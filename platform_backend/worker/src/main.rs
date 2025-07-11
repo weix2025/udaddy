@@ -1,7 +1,22 @@
-// Worker入口：程序主入口。
-// 初始化运行时、加载配置、创建数据库连接池，并启动一个或多个任务消费者。
-// 可以配置启动的并发消费者数量以匹配服务器资源。
+mod consumer;
+mod processor;
 
-fn main() {
-    println!("Hello, from worker!");
+use core::db;
+use tracing::info;
+
+#[tokio::main]
+async fn main() -> core::error::Result<()> {
+    tracing_subscriber::fmt()
+        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+        .init();
+
+    info!("Starting worker");
+
+    let db_pool = db::init_db_pool().await?;
+    
+    // TODO: Initialize Redis client
+
+    // TODO: Start consumer loop
+
+    Ok(())
 }

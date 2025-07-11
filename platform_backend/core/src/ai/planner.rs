@@ -1,4 +1,48 @@
-// 【AI核心】流水线规划器：实现A*搜索算法。
-// 它将Agent库视为一个动态图，根据用户需求，以f(n) = g(n) + h(n)为评估标准，
-// 智能搜索并规划出综合成本最优的多条流水线方案。
-// g(n)是路径上所有Agent成本的累加，h(n)则通过tagging模块计算当前状态与目标的“语义距离”。
+use std::collections::{BinaryHeap, HashMap};
+use uuid::Uuid;
+use std::cmp::Ordering;
+use crate::db::models::Agent;
+use super::tagging::{Capability, semantic_distance};
+
+#[derive(Debug, Clone, PartialEq)]
+struct Node {
+    agent: Agent,
+    cost: f32,
+    heuristic: f32,
+    parent: Option<Box<Node>>,
+}
+
+impl Eq for Node {}
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        let self_f = self.cost + self.heuristic;
+        let other_f = other.cost + other.heuristic;
+        other_f.partial_cmp(&self_f)
+    }
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.partial_cmp(other).unwrap()
+    }
+}
+
+pub struct AStarPlanner;
+
+impl AStarPlanner {
+    pub fn find_pipelines(
+        agents: Vec<Agent>, 
+        start_capability: Capability, 
+        goal_capability: Capability
+    ) -> Vec<Vec<Agent>> {
+        let mut open_set: BinaryHeap<Node> = BinaryHeap::new();
+        let mut all_nodes: HashMap<Uuid, Node> = HashMap::new();
+
+        // This is a simplified A* implementation. A real one would need
+        // a more robust graph representation and cost calculation.
+
+        // TODO: Implement the A* search logic.
+        
+        vec![] // Return empty list for now
+    }
+}

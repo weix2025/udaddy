@@ -1,0 +1,10 @@
+C:\Users\Xion\Desktop\test\udaddy\platform_backend\target\debug\deps\libwasmtime_wit_bindgen-98dbc59f15b322b6.rmeta: C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\lib.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\rust.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\source.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\types.rs
+
+C:\Users\Xion\Desktop\test\udaddy\platform_backend\target\debug\deps\libwasmtime_wit_bindgen-98dbc59f15b322b6.rlib: C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\lib.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\rust.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\source.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\types.rs
+
+C:\Users\Xion\Desktop\test\udaddy\platform_backend\target\debug\deps\wasmtime_wit_bindgen-98dbc59f15b322b6.d: C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\lib.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\rust.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\source.rs C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\types.rs
+
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\lib.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\rust.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\source.rs:
+C:\Users\Xion\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\wasmtime-wit-bindgen-18.0.4\src\types.rs:
